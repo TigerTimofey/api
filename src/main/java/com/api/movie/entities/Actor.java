@@ -14,11 +14,11 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor // Required for JPA
+@Table(name="actor")
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
