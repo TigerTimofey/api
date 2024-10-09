@@ -42,7 +42,6 @@ public class ActorServiceImpl implements ActorService {
 
         actor.setName(actorDetails.getName());
         actor.setBirthDate(actorDetails.getBirthDate());
-        // Обнови другие поля по необходимости
 
         return actorRepository.save(actor);
     }

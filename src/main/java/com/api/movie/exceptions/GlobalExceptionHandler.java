@@ -13,5 +13,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    // Добавь другие обработчики исключений по необходимости
 }

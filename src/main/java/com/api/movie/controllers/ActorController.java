@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -54,6 +55,27 @@ public class ActorController {
     public ResponseEntity<List<Actor>> getAllActors() {
         return ResponseEntity.ok(actorService.getAllActors());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Actor> getActorById(@PathVariable Long id) {
+        Optional<Actor> actor = actorService.getActorById(id);
+        return actor.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteActor(@PathVariable Long id) {
+        Optional<Actor> actor = actorService.getActorById(id);
+
+        if (actor.isPresent()) {
+            actorService.deleteActor(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     // Associate Actor with Movie
     @PostMapping("/{actorId}/movies/{movieId}")
     public ResponseEntity<Actor> addActorToMovie(@PathVariable Long actorId, @PathVariable Long movieId) {

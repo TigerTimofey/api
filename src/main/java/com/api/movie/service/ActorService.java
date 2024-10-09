@@ -13,6 +13,9 @@ public interface ActorService {
     List<Actor> getAllActors();
     Actor updateActor(Long id, Actor actorDetails);
     void deleteActor(Long id);
+
+    // FILTER BY NAME
+
     Actor addActorToMovie(Long actorId, Long movieId);
     Set<Movie> getMoviesByActor(Long actorId);
 }
