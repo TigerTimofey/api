@@ -4,11 +4,13 @@ import com.api.movie.entities.Actor;
 import com.api.movie.entities.Movie;
 import com.api.movie.repositories.ActorRepository;
 import com.api.movie.repositories.MovieRepository;
+import com.api.movie.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 
@@ -20,7 +22,8 @@ public class ActorController {
 
     @Autowired
     private ActorRepository actorRepository;
-
+    @Autowired
+    private ActorService actorService;
     @Autowired
     private MovieRepository movieRepository;
 
@@ -47,12 +50,10 @@ public class ActorController {
         Actor updatedActor = actorRepository.save(actor);
         return ResponseEntity.ok(updatedActor);
     }
-    // Get all Actors
     @GetMapping
-    public ResponseEntity<Set<Actor>> getAllActors() {
-        return ResponseEntity.ok(Set.copyOf(actorRepository.findAll()));
+    public ResponseEntity<List<Actor>> getAllActors() {
+        return ResponseEntity.ok(actorService.getAllActors());
     }
-
     // Associate Actor with Movie
     @PostMapping("/{actorId}/movies/{movieId}")
     public ResponseEntity<Actor> addActorToMovie(@PathVariable Long actorId, @PathVariable Long movieId) {
