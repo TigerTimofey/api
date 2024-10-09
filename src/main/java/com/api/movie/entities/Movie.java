@@ -2,6 +2,7 @@ package com.api.movie.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
@@ -9,6 +10,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor // Required for JPA
+
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
