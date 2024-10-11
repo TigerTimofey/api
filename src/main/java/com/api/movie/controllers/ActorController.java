@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -31,26 +32,35 @@ public class ActorController {
     // Create a new Actor POST
     @PostMapping
     public ResponseEntity<Actor> createActor(@RequestBody Actor actor) {
-        Actor savedActor = actorRepository.save(actor);
+        Actor savedActor = actorService.createActor(actor);
         return ResponseEntity.ok(savedActor);
     }
+
 
     // Update a new Actor using PATCH
     @PatchMapping("/{actorId}")
     public ResponseEntity<Actor> updateActor(@PathVariable Long actorId, @RequestBody Map<String, Object> updates) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow();
+        Actor actor = actorService.getActorById(actorId).orElseThrow();
 
         updates.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(Actor.class, key);
             if (field != null) {
                 field.setAccessible(true);
-                ReflectionUtils.setField(field, actor, value);
+
+                // Handle LocalDate field conversion
+                if ("birthDate".equals(key) && value instanceof String) {
+                    LocalDate birthDate = LocalDate.parse((String) value); // Converts String to LocalDate
+                    ReflectionUtils.setField(field, actor, birthDate);
+                } else {
+                    ReflectionUtils.setField(field, actor, value);
+                }
             }
         });
 
-        Actor updatedActor = actorRepository.save(actor);
+        Actor updatedActor = actorService.updateActor(actorId, actor);
         return ResponseEntity.ok(updatedActor);
     }
+
     @GetMapping
     public ResponseEntity<List<Actor>> getAllActors() {
         return ResponseEntity.ok(actorService.getAllActors());
@@ -75,6 +85,20 @@ public class ActorController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Actor>> findActorsByName(@RequestParam String name) {
+        List<Actor> actors = actorService.findActorsByName(name);
+        return ResponseEntity.ok(actors);
+    }
+
+
+    @GetMapping("/{actorId}/movies")
+    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
+        Set<Movie> movies = actorService.getMoviesByActor(actorId); // Uses the service layer
+        return ResponseEntity.ok(movies);
+    }
+
+
 
     // Associate Actor with Movie
     @PostMapping("/{actorId}/movies/{movieId}")
@@ -91,11 +115,10 @@ public class ActorController {
         return ResponseEntity.ok(actor);
     }
 
-
     // Get all Movies by Actor
-    @GetMapping("/{actorId}/movies")
-    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
-        Actor actor = actorRepository.findById(actorId).orElseThrow();
-        return ResponseEntity.ok(actor.getMovies());
-    }
+//    @GetMapping("/{actorId}/movies")
+//    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
+//        Actor actor = actorRepository.findById(actorId).orElseThrow();
+//        return ResponseEntity.ok(actor.getMovies());
+//    }
 }

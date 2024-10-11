@@ -54,15 +54,19 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
+    public List<Actor> findActorsByName(String name) {
+        return actorRepository.findByNameContainingIgnoreCase(name);
+    }
+
+
+    @Override
     public Actor addActorToMovie(Long actorId, Long movieId) {
         Actor actor = actorRepository.findById(actorId).orElseThrow(() ->
                 new ResourceNotFoundException("Actor not found with id " + actorId));
         Movie movie = movieRepository.findById(movieId).orElseThrow(() ->
                 new ResourceNotFoundException("Movie not found with id " + movieId));
-
         actor.getMovies().add(movie);
         actorRepository.save(actor);
-
         return actor;
     }
 
@@ -70,7 +74,6 @@ public class ActorServiceImpl implements ActorService {
     public Set<Movie> getMoviesByActor(Long actorId) {
         Actor actor = actorRepository.findById(actorId).orElseThrow(() ->
                 new ResourceNotFoundException("Actor not found with id " + actorId));
-
         return actor.getMovies();
     }
 }

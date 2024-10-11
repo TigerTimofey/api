@@ -22,8 +22,8 @@ public class Actor {
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-//    private Instant birthDate;
     private LocalDate birthDate;
+
 
     // Many-to-Many relationship with Movie
     @ManyToMany(mappedBy = "actors")
