@@ -1,5 +1,7 @@
 package com.api.movie.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor // Required for JPA
-
+@NoArgsConstructor
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,8 @@ public class Genre {
 
     // Many-to-Many relationship with Movie
     @ManyToMany(mappedBy = "genres")
+    @JsonBackReference
+//    @JsonIgnore
     private Set<Movie> movies;
 
     // Constructor

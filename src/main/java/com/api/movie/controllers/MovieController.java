@@ -39,6 +39,7 @@ public class MovieController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     // Update a movie
     @PatchMapping("/{id}")
     public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movieDetails) {
@@ -61,19 +62,17 @@ public class MovieController {
     }
 
     // Filter movies by release year
-    @GetMapping("/filter/releaseYear")
-    public ResponseEntity<List<Movie>> findMoviesByReleaseYear(@RequestParam Integer releaseYear) {
+    @GetMapping("/filter")
+    public ResponseEntity<List<Movie>> findMoviesByReleaseYear(@RequestParam("year") Integer releaseYear) {
         List<Movie> movies = movieService.findMoviesByReleaseYear(releaseYear);
         return ResponseEntity.ok(movies);
     }
-
     // Add actor to a movie
     @PostMapping("/{movieId}/actors/{actorId}")
     public ResponseEntity<Movie> addActorToMovie(@PathVariable Long movieId, @PathVariable Long actorId) {
         Movie updatedMovie = movieService.addActorToMovie(movieId, actorId);
         return ResponseEntity.ok(updatedMovie);
     }
-
 
     // Get all actors in a specific movie
     @GetMapping("/{movieId}/actors")

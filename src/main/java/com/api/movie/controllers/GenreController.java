@@ -2,56 +2,64 @@ package com.api.movie.controllers;
 
 import com.api.movie.entities.Genre;
 import com.api.movie.entities.Movie;
-import com.api.movie.repositories.GenreRepository;
-import com.api.movie.repositories.MovieRepository;
+import com.api.movie.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/genres")
 public class GenreController {
 
     @Autowired
-    private GenreRepository genreRepository;
+    private GenreService genreService;
 
-    @Autowired
-    private MovieRepository movieRepository;
-
-    // Create a new Genre
+    // Create a new genre
     @PostMapping
     public ResponseEntity<Genre> createGenre(@RequestBody Genre genre) {
-        Genre savedGenre = genreRepository.save(genre);
+        Genre savedGenre = genreService.createGenre(genre);
         return ResponseEntity.ok(savedGenre);
     }
 
-    // Get all Genres
+    // Retrieve all genres
     @GetMapping
-    public ResponseEntity<Set<Genre>> getAllGenres() {
-        return ResponseEntity.ok(Set.copyOf(genreRepository.findAll()));
+    public ResponseEntity<List<Genre>> getAllGenres() {
+        return ResponseEntity.ok(genreService.getAllGenres());
     }
 
-    // Associate Genre with Movie
-    @PostMapping("/{genreId}/movies/{movieId}")
-    public ResponseEntity<Genre> addGenreToMovie(@PathVariable Long genreId, @PathVariable Long movieId) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow();
-        Movie movie = movieRepository.findById(movieId).orElseThrow();
-
-        movie.getGenres().add(genre);
-        genre.getMovies().add(movie);
-
-        movieRepository.save(movie);
-        genreRepository.save(genre);
-
+    // Retrieve a genre by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Genre> getGenreById(@PathVariable Long id) {
+        Genre genre = genreService.getGenreById(id);
         return ResponseEntity.ok(genre);
     }
 
-    // Get all Movies by Genre
-    @GetMapping("/{genreId}/movies")
-    public ResponseEntity<Set<Movie>> getMoviesByGenre(@PathVariable Long genreId) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow();
-        return ResponseEntity.ok(genre.getMovies());
+    // Update a genre's name
+    @PatchMapping("/{id}")
+    public ResponseEntity<Genre> updateGenre(@PathVariable Long id, @RequestBody Genre newName) {
+        Genre updatedGenre = genreService.updateGenre(id, newName);
+        return ResponseEntity.ok(updatedGenre);
+    }
+
+    // Delete a genre
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
+        genreService.deleteGenre(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Get all genres for a specific movie
+    @GetMapping("/movie/{movieId}")
+    public ResponseEntity<List<Genre>> getGenresByMovie(@PathVariable Long movieId) {
+        List<Genre> genres = genreService.findGenresByMovieId(movieId);
+        return ResponseEntity.ok(genres);
+    }
+
+    @PostMapping("/{genreId}/movies/{movieId}")
+    public ResponseEntity<Movie> addGenreToMovie(@PathVariable Long genreId, @PathVariable Long movieId) {
+        Movie updatedMovie = genreService.addGenreToMovie(movieId, genreId);
+        return ResponseEntity.ok(updatedMovie);
     }
 }
