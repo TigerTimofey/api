@@ -76,4 +76,5 @@ public class ActorServiceImpl implements ActorService {
                 new ResourceNotFoundException("Actor not found with id " + actorId));
         return actor.getMovies();
     }
+
 }

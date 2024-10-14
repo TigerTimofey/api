@@ -1,5 +1,6 @@
 package com.api.movie.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Actor {
 
     // Many-to-Many relationship with Movie
     @ManyToMany(mappedBy = "actors")
+    @JsonIgnore
     private Set<Movie> movies;
 
     // Constructor

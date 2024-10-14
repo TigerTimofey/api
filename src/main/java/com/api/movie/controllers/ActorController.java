@@ -92,11 +92,11 @@ public class ActorController {
     }
 
 
-    @GetMapping("/{actorId}/movies")
-    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
-        Set<Movie> movies = actorService.getMoviesByActor(actorId); // Uses the service layer
-        return ResponseEntity.ok(movies);
-    }
+//    @GetMapping("/{actorId}/movies")
+//    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
+//        Set<Movie> movies = actorService.getMoviesByActor(actorId); // Uses the service layer
+//        return ResponseEntity.ok(movies);
+//    }
 
 
 
@@ -116,9 +116,9 @@ public class ActorController {
     }
 
     // Get all Movies by Actor
-//    @GetMapping("/{actorId}/movies")
-//    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
-//        Actor actor = actorRepository.findById(actorId).orElseThrow();
-//        return ResponseEntity.ok(actor.getMovies());
-//    }
+    @GetMapping("/{actorId}/movies")
+    public ResponseEntity<Set<Movie>> getMoviesByActor(@PathVariable Long actorId) {
+        Actor actor = actorRepository.findById(actorId).orElseThrow();
+        return ResponseEntity.ok(actor.getMovies());
+    }
 }
