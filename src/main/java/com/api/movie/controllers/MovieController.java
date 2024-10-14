@@ -54,12 +54,13 @@ public class MovieController {
         return ResponseEntity.noContent().build();
     }
 
-    // Filter movies by genre
+// Filter movies by genre
     @GetMapping("/filter/genre")
-    public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam String genreName) {
-        List<Movie> movies = movieService.findMoviesByGenre(genreName);
+    public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam String genre) {
+        List<Movie> movies = movieService.findMoviesByGenre(genre);
         return ResponseEntity.ok(movies);
     }
+
 
     // Filter movies by release year
     @GetMapping("/filter")
