@@ -56,10 +56,26 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(Long id) {
+        // Find the movie by ID
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+
+        // Check if the movie has associated genres
+        if (!movie.getGenres().isEmpty()) {
+            // Throw an exception if there are associated genres
+            throw new IllegalStateException("Cannot delete movie '" + movie.getTitle() + "' because it is associated with genres.");
+        }
+
+        // Check if the movie has associated actors
+        if (!movie.getActors().isEmpty()) {
+            // Throw an exception if there are associated actors
+            throw new IllegalStateException("Cannot delete movie '" + movie.getTitle() + "' because it is associated with actors.");
+        }
+
+        // If no associations are present, delete the movie
         movieRepository.delete(movie);
     }
+
 
     @Override
     public List<Movie> findMoviesByGenre(Long genreId) {

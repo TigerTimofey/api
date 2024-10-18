@@ -6,6 +6,7 @@ import com.api.movie.repositories.ActorRepository;
 import com.api.movie.repositories.MovieRepository;
 import com.api.movie.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.util.ReflectionUtils;
@@ -74,14 +75,12 @@ public class ActorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteActor(@PathVariable Long id) {
-        Optional<Actor> actor = actorService.getActorById(id);
-
-        if (actor.isPresent()) {
-            actorService.deleteActor(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<String> deleteActor(@PathVariable Long id) {
+        try {
+            actorService.deleteActor(id);  // Call the delete method
+            return ResponseEntity.noContent().build();  // 204 No Content if successful
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());  // 400 Bad Request if the deletion is prevented
         }
     }
 

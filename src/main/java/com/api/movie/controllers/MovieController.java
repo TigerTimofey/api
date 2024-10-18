@@ -5,6 +5,7 @@ import com.api.movie.entities.Actor;
 import com.api.movie.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,9 +51,13 @@ public class MovieController {
 
     // Delete a movie
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
-        movieService.deleteMovie(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteMovie(@PathVariable Long id) {
+        try {
+            movieService.deleteMovie(id);  // Call the delete method
+            return ResponseEntity.noContent().build();  // 204 No Content if successful
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());  // 400 Bad Request if the deletion is prevented
+        }
     }
 
 // Filter movies by genre

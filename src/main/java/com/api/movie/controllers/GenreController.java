@@ -4,6 +4,7 @@ import com.api.movie.entities.Genre;
 import com.api.movie.entities.Movie;
 import com.api.movie.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,9 +46,13 @@ public class GenreController {
 
     // Delete a genre
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
-        genreService.deleteGenre(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteGenre(@PathVariable Long id) {
+        try {
+            genreService.deleteGenre(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // Get all genres for a specific movie

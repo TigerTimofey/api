@@ -45,13 +45,22 @@ public class ActorServiceImpl implements ActorService {
 
         return actorRepository.save(actor);
     }
-
     @Override
     public void deleteActor(Long id) {
-        Actor actor = actorRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Actor not found with id " + id));
+        // Find the Actor by ID
+        Actor actor = actorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id " + id));
+
+        // Check if the actor has associated movies
+        if (!actor.getMovies().isEmpty()) {
+            // Throw an exception if there are associated movies
+            throw new IllegalStateException("Cannot delete actor " + actor.getName() + " because they are associated with movies.");
+        }
+
+        // If no movies are associated, delete the actor
         actorRepository.delete(actor);
     }
+
 
     @Override
     public List<Actor> findActorsByName(String name) {
