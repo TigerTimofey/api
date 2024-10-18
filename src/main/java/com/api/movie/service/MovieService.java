@@ -24,7 +24,7 @@ public interface MovieService {
     void deleteMovie(Long id);
 
     // Filter movies by genre
-    List<Movie> findMoviesByGenre(String genreName);
+    List<Movie> findMoviesByGenre(Long genreId);
 
     // Filter movies by release year
     List<Movie> findMoviesByReleaseYear(Integer releaseYear);

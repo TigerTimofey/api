@@ -3,6 +3,7 @@ package com.api.movie.controllers;
 import com.api.movie.entities.Movie;
 import com.api.movie.entities.Actor;
 import com.api.movie.service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class MovieController {
 
     // Create a new movie
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
         Movie savedMovie = movieService.createMovie(movie);
         return ResponseEntity.ok(savedMovie);
     }
@@ -55,11 +56,12 @@ public class MovieController {
     }
 
 // Filter movies by genre
-    @GetMapping("/filter/genre")
-    public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam String genre) {
-        List<Movie> movies = movieService.findMoviesByGenre(genre);
-        return ResponseEntity.ok(movies);
-    }
+@GetMapping("/filter/genre")
+public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam("genre") Long genreId) {
+    List<Movie> movies = movieService.findMoviesByGenre(genreId);
+    return ResponseEntity.ok(movies);
+}
+
 
 
     // Filter movies by release year

@@ -62,8 +62,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> findMoviesByGenre(String genreName) {
-        return movieRepository.findByGenresNameContainingIgnoreCase(genreName);
+    public List<Movie> findMoviesByGenre(Long genreId) {
+        return movieRepository.findByGenresId(genreId);
     }
 
     @Override
