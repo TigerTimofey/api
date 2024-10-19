@@ -32,7 +32,11 @@ public interface MovieService {
     // Add actor to Movie
     Movie addActorToMovie(Long movieId, Long actorId);
 
-
     // Get all actors in a specific movie
     Set<Actor> getActorsByMovie(Long movieId);
+
+    //Extra
+    //Filter by movie name
+    List<Movie> findMoviesByName(String movieTitle);
+
 }

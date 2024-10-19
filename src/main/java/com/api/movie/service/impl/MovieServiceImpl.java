@@ -113,4 +113,12 @@ public class MovieServiceImpl implements MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + movieId));
         return movie.getActors();
     }
+
+    //Extra
+    //Movie by name
+    @Override
+    public List<Movie> findMoviesByName(String movieTitle) {
+        return movieRepository.findByTitleContainingIgnoreCase(movieTitle);
+    }
+
 }

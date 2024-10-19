@@ -10,4 +10,5 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByGenresId(Long genreId);
     List<Movie> findByReleaseYear(Integer releaseYear);
+    List<Movie> findByTitleContainingIgnoreCase(String movieTitle);
 }

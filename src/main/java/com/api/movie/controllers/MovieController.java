@@ -90,4 +90,12 @@ public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam("genre") Long
         return ResponseEntity.ok(actors);
     }
 
+    // Search for movies by title
+    @GetMapping("/search")
+    public ResponseEntity<List<Movie>> searchMoviesByTitle(@RequestParam("title") String movieTitle) {
+        List<Movie> movies = movieService.findMoviesByName(movieTitle);
+        return ResponseEntity.ok(movies);
+    }
 }
+
+
