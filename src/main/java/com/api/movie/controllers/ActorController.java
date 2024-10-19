@@ -2,6 +2,7 @@ package com.api.movie.controllers;
 
 import com.api.movie.entities.Actor;
 import com.api.movie.entities.Movie;
+import com.api.movie.exceptions.ResourceNotFoundException;
 import com.api.movie.repositories.ActorRepository;
 import com.api.movie.repositories.MovieRepository;
 import com.api.movie.service.ActorService;
@@ -71,8 +72,9 @@ public class ActorController {
     public ResponseEntity<Actor> getActorById(@PathVariable Long id) {
         Optional<Actor> actor = actorService.getActorById(id);
         return actor.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id " + id));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteActor(@PathVariable Long id) {

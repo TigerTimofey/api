@@ -2,6 +2,7 @@ package com.api.movie.controllers;
 
 import com.api.movie.entities.Movie;
 import com.api.movie.entities.Actor;
+import com.api.movie.exceptions.ResourceNotFoundException;
 import com.api.movie.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class MovieController {
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
         return movieService.getMovieById(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
     }
 
 
