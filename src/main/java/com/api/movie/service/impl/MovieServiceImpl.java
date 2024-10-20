@@ -9,7 +9,12 @@ import com.api.movie.repositories.GenreRepository;
 import com.api.movie.repositories.ActorRepository;
 import com.api.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.*;
 
@@ -31,9 +36,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<Movie> getAllMovies(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieRepository.findAll(pageable);
+        return moviePage.getContent();
     }
+
 
     @Override
     public Optional<Movie> getMovieById(Long id) {
@@ -56,14 +64,30 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(Long id) {
+        // Find the movie by ID
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+
+        // Check if the movie has associated genres
+        if (!movie.getGenres().isEmpty()) {
+            // Throw an exception if there are associated genres
+            throw new IllegalStateException("Cannot delete movie '" + movie.getTitle() + "' because it is associated with genres.");
+        }
+
+        // Check if the movie has associated actors
+        if (!movie.getActors().isEmpty()) {
+            // Throw an exception if there are associated actors
+            throw new IllegalStateException("Cannot delete movie '" + movie.getTitle() + "' because it is associated with actors.");
+        }
+
+        // If no associations are present, delete the movie
         movieRepository.delete(movie);
     }
 
+
     @Override
-    public List<Movie> findMoviesByGenre(String genreName) {
-        return movieRepository.findByGenresNameContainingIgnoreCase(genreName);
+    public List<Movie> findMoviesByGenre(Long genreId) {
+        return movieRepository.findByGenresId(genreId);
     }
 
     @Override
@@ -97,4 +121,19 @@ public class MovieServiceImpl implements MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + movieId));
         return movie.getActors();
     }
+
+    //Extra
+    //Movie by name
+    @Override
+    public List<Movie> findMoviesByName(String movieTitle) {
+        return movieRepository.findByTitleContainingIgnoreCase(movieTitle);
+    }
+
+    //Pagination
+
+
+
+
+
+
 }

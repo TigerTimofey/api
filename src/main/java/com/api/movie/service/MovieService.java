@@ -2,6 +2,8 @@ package com.api.movie.service;
 
 import com.api.movie.entities.Movie;
 import com.api.movie.entities.Actor;
+
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -12,7 +14,7 @@ public interface MovieService {
     Movie createMovie(Movie movie);
 
     // Retrieve all movies
-    List<Movie> getAllMovies();
+    List<Movie> getAllMovies(int page, int size);
 
     // Retrieve a specific movie by ID
     Optional<Movie> getMovieById(Long id);
@@ -24,7 +26,7 @@ public interface MovieService {
     void deleteMovie(Long id);
 
     // Filter movies by genre
-    List<Movie> findMoviesByGenre(String genreName);
+    List<Movie> findMoviesByGenre(Long genreId);
 
     // Filter movies by release year
     List<Movie> findMoviesByReleaseYear(Integer releaseYear);
@@ -32,7 +34,12 @@ public interface MovieService {
     // Add actor to Movie
     Movie addActorToMovie(Long movieId, Long actorId);
 
-
     // Get all actors in a specific movie
     Set<Actor> getActorsByMovie(Long movieId);
+
+    //Extra
+    //Filter by movie name
+    List<Movie> findMoviesByName(String movieTitle);
+
+
 }

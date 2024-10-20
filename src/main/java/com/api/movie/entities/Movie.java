@@ -2,6 +2,9 @@ package com.api.movie.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +20,15 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "Title is required")
+    @Size(min = 1, max = 100, message = "Title should be between 1 and 100 characters")
     private String title;
+
+    @NotNull(message = "Release year is required")
     private Integer releaseYear;
+
+    @NotNull(message = "Duration is required")
+    @Min(value = 1, message = "Duration must be greater than 0")
     private Integer duration;
 
     // Many-to-Many relationship with Genre

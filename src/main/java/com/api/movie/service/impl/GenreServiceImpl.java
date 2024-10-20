@@ -48,8 +48,16 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void deleteGenre(Long id) {
+        // Find the Genre by ID
         Genre genre = genreRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id " + id));
+
+        // Check if there are any associated movies
+        if (!genre.getMovies().isEmpty()) {
+            throw new IllegalStateException("Cannot delete genre " + genre.getName() + " because it has associated movies.");
+        }
+
+        // If no movies are associated, delete the genre
         genreRepository.delete(genre);
     }
 

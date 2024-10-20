@@ -2,12 +2,15 @@ package com.api.movie.controllers;
 
 import com.api.movie.entities.Genre;
 import com.api.movie.entities.Movie;
+import com.api.movie.exceptions.ResourceNotFoundException;
 import com.api.movie.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/genres")
@@ -33,8 +36,11 @@ public class GenreController {
     @GetMapping("/{id}")
     public ResponseEntity<Genre> getGenreById(@PathVariable Long id) {
         Genre genre = genreService.getGenreById(id);
-        return ResponseEntity.ok(genre);
+        return Optional.ofNullable(genre)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResourceNotFoundException("Genre not found with id " + id));
     }
+
 
     // Update a genre's name
     @PatchMapping("/{id}")
@@ -45,9 +51,13 @@ public class GenreController {
 
     // Delete a genre
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGenre(@PathVariable Long id) {
-        genreService.deleteGenre(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteGenre(@PathVariable Long id) {
+        try {
+            genreService.deleteGenre(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // Get all genres for a specific movie
