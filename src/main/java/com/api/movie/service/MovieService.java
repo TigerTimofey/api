@@ -2,6 +2,8 @@ package com.api.movie.service;
 
 import com.api.movie.entities.Movie;
 import com.api.movie.entities.Actor;
+
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,5 +40,6 @@ public interface MovieService {
     //Extra
     //Filter by movie name
     List<Movie> findMoviesByName(String movieTitle);
+
 
 }

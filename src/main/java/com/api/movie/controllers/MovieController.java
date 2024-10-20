@@ -6,6 +6,8 @@ import com.api.movie.exceptions.ResourceNotFoundException;
 import com.api.movie.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +98,8 @@ public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam("genre") Long
         List<Movie> movies = movieService.findMoviesByName(movieTitle);
         return ResponseEntity.ok(movies);
     }
+
+
 }
 
 
