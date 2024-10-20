@@ -3,7 +3,7 @@ package com.api.movie.service;
 import com.api.movie.entities.Movie;
 import com.api.movie.entities.Actor;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,7 +14,7 @@ public interface MovieService {
     Movie createMovie(Movie movie);
 
     // Retrieve all movies
-    List<Movie> getAllMovies();
+    List<Movie> getAllMovies(int page, int size);
 
     // Retrieve a specific movie by ID
     Optional<Movie> getMovieById(Long id);

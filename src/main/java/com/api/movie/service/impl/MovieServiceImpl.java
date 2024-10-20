@@ -9,9 +9,13 @@ import com.api.movie.repositories.GenreRepository;
 import com.api.movie.repositories.ActorRepository;
 import com.api.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+
 import java.util.*;
 
 @Service
@@ -32,9 +36,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<Movie> getAllMovies(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> moviePage = movieRepository.findAll(pageable);
+        return moviePage.getContent();
     }
+
 
     @Override
     public Optional<Movie> getMovieById(Long id) {
@@ -121,6 +128,11 @@ public class MovieServiceImpl implements MovieService {
     public List<Movie> findMoviesByName(String movieTitle) {
         return movieRepository.findByTitleContainingIgnoreCase(movieTitle);
     }
+
+    //Pagination
+
+
+
 
 
 

@@ -6,6 +6,7 @@ import com.api.movie.exceptions.ResourceNotFoundException;
 import com.api.movie.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,10 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
+
     // Create a new movie
     @PostMapping
     public ResponseEntity<Movie> createMovie(@Valid @RequestBody Movie movie) {
@@ -31,9 +36,27 @@ public class MovieController {
     }
 
     // Retrieve all movies
-    @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+    @GetMapping()
+    public ResponseEntity<List<Movie>> getAllMovies(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size
+    ) {
+        // Validate page and size
+        if (page < 0) {
+            throw new ResourceNotFoundException("Page number must be zero or greater");
+        }
+
+        if (size <= 0) {
+            throw new ResourceNotFoundException("Size must be greater than zero");
+        }
+
+        // Optional: Limit maximum size to prevent overloading the server
+        if (size > 100) {
+            throw new ResourceNotFoundException("Size must not exceed 100");
+        }
+
+        // If validation passes, fetch the movies
+        return ResponseEntity.ok(movieService.getAllMovies(page, size));
     }
 
     // Retrieve a specific movie by ID
@@ -98,6 +121,8 @@ public ResponseEntity<List<Movie>> findMoviesByGenre(@RequestParam("genre") Long
         List<Movie> movies = movieService.findMoviesByName(movieTitle);
         return ResponseEntity.ok(movies);
     }
+
+    //Pagination
 
 
 }
